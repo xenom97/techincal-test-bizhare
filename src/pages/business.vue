@@ -55,10 +55,9 @@ const fetchCategories = async () => {
 
 watch(
   () => router.currentRoute.value.query,
-  (query) => {
-    console.log('Query: ', query)
-    search.value = (query.search as string) || ''
-    pagination.currentPage = parseInt(query.page as string) || 1
+  (_query) => {
+    search.value = (_query.search as string) || ''
+    pagination.currentPage = parseInt(_query.page as string) || 1
 
     fetchBusinesses()
   },
