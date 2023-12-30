@@ -2,7 +2,7 @@
 
 ## Live Demo
 
-You can try the live demo of the application here: [Live Demo](https://app.sample.com)
+You can try the live demo of the application here: [Live Demo](https://bizhare-app.vercel.app)
 
 ## Tech Stack Overview
 
