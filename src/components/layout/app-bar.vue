@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import Icon from '@/components/icon/index.vue'
 import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import Modal from '@/components/modal/index.vue'
 
 const isScrolled = ref<boolean>(false)
+const isShowMessageModal = ref<boolean>(false)
+
+const router = useRouter()
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 0
@@ -15,15 +20,33 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+
+const goBack = () => {
+  router.back()
+}
+
+const openMessage = () => {
+  isShowMessageModal.value = true
+}
 </script>
 
 <template>
   <nav class="app-bar" :class="{ 'app-bar--shadow': isScrolled }">
     <div class="app-bar__content container">
-      <Icon name="arrow-left" />
+      <button @click="goBack">
+        <Icon name="arrow-left" />
+      </button>
+
       <h1>Daftar Bisnis</h1>
-      <Icon name="message" />
+
+      <button @click="openMessage">
+        <Icon name="message" />
+      </button>
     </div>
+
+    <Modal v-model="isShowMessageModal" title="Pesan">
+      <h4>Opss! Tidak ada pesan</h4>
+    </Modal>
   </nav>
 </template>
 
@@ -45,5 +68,9 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.app-bar button {
+  cursor: pointer;
 }
 </style>
