@@ -53,6 +53,15 @@ const applyFilter = () => {
   emit('update:category-ids', selectedIds.value)
   isShowModal.value = false
 }
+
+const categoryBtnText = computed(() => {
+  let text = 'Kategori'
+
+  if (props.categoryIds.length) {
+    text += ` (${props.categoryIds.length})`
+  }
+  return text
+})
 </script>
 
 <template>
@@ -60,7 +69,7 @@ const applyFilter = () => {
     <Input v-model="internalSearch" placeholder="Cari nama bisnis" type="search" icon="search" />
     <Button
       theme="outline"
-      text="Kategori"
+      :text="categoryBtnText"
       icon="option"
       class="list-header__button"
       @click="isShowModal = true"
