@@ -14,10 +14,12 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{vue,js,ts}": ["npm run lint", "npm run format"]
+    "*.{vue,js,ts}": [
+      "npm run lint",
+      "npm run format"
+    ]
   },
   "dependencies": {
-    "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },
