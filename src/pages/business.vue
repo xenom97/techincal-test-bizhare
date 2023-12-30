@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { getBusinessCategories, getBusinessList } from '@/api/business'
 import type { IBusiness, ICategory } from '@/api/response.interface'
 import BusinessListHeader from '@/components/business/list-header.vue'
 import BusinessList from '@/components/business/list.vue'
 import Pagination from '@/components/pagination/index.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const search = ref<string>('')
 const businessList = ref<IBusiness[]>([])
@@ -18,8 +21,6 @@ const pagination = reactive({
 
 const onPageChange = (page: number) => {
   pagination.currentPage = page
-
-  fetchBusinesses()
 }
 
 const fetchBusinesses = async () => {
@@ -52,15 +53,35 @@ const fetchCategories = async () => {
   }
 }
 
+watch(
+  () => router.currentRoute.value.query,
+  (query) => {
+    console.log('Query: ', query)
+    search.value = (query.search as string) || ''
+    pagination.currentPage = parseInt(query.page as string) || 1
+
+    fetchBusinesses()
+  },
+  { immediate: true }
+)
+
+watch([search, () => pagination.currentPage], ([_search, _currentPage]) => {
+  router.push({
+    query: {
+      search: _search,
+      page: _currentPage
+    }
+  })
+})
+
 onMounted(() => {
-  fetchBusinesses()
   fetchCategories()
 })
 </script>
 
 <template>
   <div class="container">
-    <BusinessListHeader v-model="search" />
+    <BusinessListHeader v-model:search="search" />
 
     <BusinessList :list="businessList" />
 
