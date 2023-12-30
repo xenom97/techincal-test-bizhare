@@ -5,6 +5,7 @@ import type { IBusiness, ICategory } from '@/api/response.interface'
 import BusinessListHeader from '@/components/business/list-header.vue'
 import BusinessList from '@/components/business/list.vue'
 import Pagination from '@/components/pagination/index.vue'
+import Card from '@/components/card/index.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -12,6 +13,9 @@ const router = useRouter()
 const search = ref<string>('')
 const businessList = ref<IBusiness[]>([])
 const categoryList = ref<ICategory[]>([])
+const filteredCategoryIds = ref<string[]>([])
+
+const isFetching = ref(false)
 
 const pagination = reactive({
   currentPage: 1,
@@ -25,9 +29,11 @@ const onPageChange = (page: number) => {
 
 const fetchBusinesses = async () => {
   try {
+    isFetching.value = true
+
     const res = await getBusinessList({
       businessName: search.value,
-      listCategory: [],
+      listCategory: filteredCategoryIds.value,
       page: pagination.currentPage,
       size: pagination.pageSize
     })
@@ -38,6 +44,8 @@ const fetchBusinesses = async () => {
     }
   } catch (error) {
     console.log('Failed to fetch businesses: ', error)
+  } finally {
+    isFetching.value = false
   }
 }
 
@@ -56,7 +64,9 @@ const fetchCategories = async () => {
 watch(
   () => router.currentRoute.value.query,
   (_query) => {
+    console.log({ _query })
     search.value = (_query.search as string) || ''
+    filteredCategoryIds.value = (_query.categoryIds as string[]) || []
     pagination.currentPage = parseInt(_query.page as string) || 1
 
     fetchBusinesses()
@@ -64,14 +74,18 @@ watch(
   { immediate: true }
 )
 
-watch([search, () => pagination.currentPage], ([_search, _currentPage]) => {
-  router.push({
-    query: {
-      search: _search,
-      page: _currentPage
-    }
-  })
-})
+watch(
+  [search, filteredCategoryIds, () => pagination.currentPage],
+  ([_search, _categoryIds, _currentPage]) => {
+    router.push({
+      query: {
+        search: _search,
+        categoryIds: _categoryIds,
+        page: _currentPage
+      }
+    })
+  }
+)
 
 onMounted(() => {
   fetchCategories()
@@ -80,15 +94,34 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <BusinessListHeader v-model:search="search" />
-
-    <BusinessList :list="businessList" />
-
-    <Pagination
-      :current-page="pagination.currentPage"
-      :per-page="pagination.pageSize"
-      :total-pages="pagination.total"
-      @change="onPageChange"
+    <BusinessListHeader
+      v-model:search="search"
+      :categories="categoryList"
+      v-model:category-ids="filteredCategoryIds"
     />
+
+    <Card class="card-info" v-if="!businessList.length || isFetching">
+      {{ isFetching ? 'Sedang mengambil data...' : 'Opss! Data tidak ditemukan' }}
+    </Card>
+
+    <template v-else>
+      <BusinessList :list="businessList" />
+
+      <Pagination
+        :current-page="pagination.currentPage"
+        :per-page="pagination.pageSize"
+        :total-pages="pagination.total"
+        @change="onPageChange"
+      />
+    </template>
   </div>
 </template>
+
+<style scoped>
+.card-info {
+  text-align: center;
+  margin-top: 30px;
+  color: #666;
+  padding: 20px;
+}
+</style>

@@ -11,6 +11,10 @@ const props = defineProps({
   title: {
     type: String,
     default: ''
+  },
+  modalClass: {
+    type: String,
+    default: ''
   }
 })
 
@@ -28,12 +32,12 @@ const isShow = computed({
   <Teleport to="body">
     <Transition name="modal">
       <div v-if="isShow" class="modal__overlay">
-        <Card class="modal">
+        <Card class="modal" :class="modalClass">
           <button class="modal__btn-close" @click="isShow = false">
             <Icon name="close" />
           </button>
 
-          <h3>{{ title || 'Title' }}</h3>
+          <h3 class="modal__title">{{ title || 'Title' }}</h3>
 
           <div class="modal__content">
             <slot></slot>
@@ -61,7 +65,7 @@ const isShow = computed({
 
 .modal {
   padding: 16px;
-  min-width: 480px;
+  min-width: 320px;
 }
 
 .modal__btn-close {
@@ -76,6 +80,10 @@ const isShow = computed({
   border-radius: 50%;
   width: 30px;
   height: 30px;
+}
+
+.modal__title {
+  font-size: 20px;
 }
 
 .modal__content {
