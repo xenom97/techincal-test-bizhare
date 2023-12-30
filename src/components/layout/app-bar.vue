@@ -68,6 +68,7 @@ const openMessage = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 !important;
 }
 
 .app-bar button {

@@ -172,6 +172,7 @@ const isPageActive = (page: number) => {
 
 .pagination__buttons-item--text {
   display: none;
+  font-weight: 600;
 }
 
 .pagination__buttons-item--text:hover {
