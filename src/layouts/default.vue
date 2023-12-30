@@ -1,8 +1,11 @@
+<script setup lang="ts">
+import LayoutAppBar from '@/components/layout/app-bar.vue'
+</script>
+
 <template>
   <div>
-    <!-- app bar -->
+    <LayoutAppBar />
 
-    <!-- main content -->
     <main>
       <router-view></router-view>
     </main>

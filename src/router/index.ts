@@ -7,11 +7,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/layouts/default.vue'),
+      redirect: '/business',
       children: [
         {
-          path: '',
-          name: 'business',
-          component: import('@/pages/business.vue')
+          path: 'business',
+          name: 'Daftar Bisnis',
+          component: () => import('@/pages/business.vue')
         }
       ]
     }
