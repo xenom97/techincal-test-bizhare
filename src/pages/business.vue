@@ -64,10 +64,14 @@ const fetchCategories = async () => {
 watch(
   () => router.currentRoute.value.query,
   (_query) => {
-    console.log({ _query })
     search.value = (_query.search as string) || ''
-    filteredCategoryIds.value = (_query.categoryIds as string[]) || []
     pagination.currentPage = parseInt(_query.page as string) || 1
+
+    if (typeof _query.categoryIds === 'string') {
+      filteredCategoryIds.value = [_query.categoryIds]
+    } else {
+      filteredCategoryIds.value = (_query.categoryIds as string[]) || []
+    }
 
     fetchBusinesses()
   },
@@ -76,7 +80,15 @@ watch(
 
 watch(
   [search, filteredCategoryIds, () => pagination.currentPage],
-  ([_search, _categoryIds, _currentPage]) => {
+  ([_search, _categoryIds, _currentPage], [_prevSearch, _prevCategoryIds]) => {
+    // Reset page if search or category is changed
+    const isSearchChanged = _search !== _prevSearch
+    const isCategoryIdsChanged = JSON.stringify(_categoryIds) !== JSON.stringify(_prevCategoryIds)
+
+    if (isSearchChanged || isCategoryIdsChanged) {
+      _currentPage = 1
+    }
+
     router.push({
       query: {
         search: _search,
