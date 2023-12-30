@@ -31,6 +31,7 @@ defineProps({
   border-radius: 8px;
   box-shadow: var(--shadow-card);
   overflow: hidden;
+  background-color: white;
 }
 
 .card__footer {
