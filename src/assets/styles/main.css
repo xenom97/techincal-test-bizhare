@@ -1,0 +1,38 @@
+:root {
+  /* colors */
+  --color-dark: #263238;
+  --color-gray: #757575;
+  --color-light-gray: #eeeeee;
+  --color-blue: #3949ab;
+
+  /* shadows */
+  --shadow-outline: 0 0 2px var(--color-gray);
+  --shadow-card: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  transition: 0.2s;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-dark);
+}
+
+input,
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 8px;
+  max-width: 1280px;
+}
